@@ -21,10 +21,10 @@ const items: Item[] = [
   {
     label: "靜態網頁",
     children: [
-      {
-        label: "123",
-        href: "/home/collection/static-web/123",
-      },
+      // {
+      //   label: "123",
+      //   href: "/home/collection/static-web/123",
+      // },
     ],
   },
   {
@@ -39,10 +39,10 @@ const items: Item[] = [
   {
     label: "自動化程式",
     children: [
-      {
-        label: "test",
-        href: "/home/collection/auto-program/test",
-      },
+      // {
+      //   label: "test",
+      //   href: "/home/collection/auto-program/test",
+      // },
     ],
   },
 ];
