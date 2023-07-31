@@ -4,7 +4,10 @@ import { apiResponse, response } from "@/app/api/api";
 import { prisma } from "@/prisma/prisma";
 import { PatchClient } from "@/app/api/background-management-system/client-order-management/client/interface";
 
-export const GET = async (context: { params: { id: number } }) => {
+export const GET = async (
+  _: NextRequest,
+  context: { params: { id: number } }
+) => {
   const r = { ...response };
   const { id } = context.params;
   try {
