@@ -2,26 +2,26 @@ import { NextRequest } from "next/server";
 
 import { apiResponse, response } from "@/app/api/api";
 import { prisma } from "@/prisma/prisma";
-import { PatchClient } from "@/app/api/background-management-system/client-order-management/client/interface";
+import { PatchProduct } from "../interface";
 
 export const GET = async (
   _: NextRequest,
-  context: { params: { id: number } }
+  context: { params: { id: string } }
 ) => {
   const r = { ...response };
   const { id } = context.params;
   try {
-    const client = await prisma.client.findFirst({ where: { id: Number(id) } });
+    const finded = await prisma.product.findFirst({ where: { id } });
     r.response = {
       status: "success",
-      message: "read client success",
-      data: client,
+      message: "read product success",
+      data: finded,
     };
     r.statusCode = 200;
   } catch (err) {
     r.response = {
       status: "failed",
-      message: "read client failed",
+      message: "read product failed",
       data: err,
     };
     r.statusCode = 400;
@@ -31,26 +31,26 @@ export const GET = async (
 
 export const PATCH = async (
   req: NextRequest,
-  context: { params: { id: number } }
+  context: { params: { id: string } }
 ) => {
   const r = { ...response };
   const { id } = context.params;
   try {
-    const payload: PatchClient = await req.json();
-    const updated = await prisma.client.update({
-      where: { id: Number(id) },
+    const payload: PatchProduct = await req.json();
+    const updated = await prisma.product.update({
+      where: { id },
       data: payload,
     });
     r.response = {
       status: "success",
-      message: "update client success",
+      message: "update product success",
       data: updated,
     };
     r.statusCode = 200;
   } catch (err) {
     r.response = {
       status: "failed",
-      message: "update client failed",
+      message: "update product failed",
       data: err,
     };
     r.statusCode = 400;
@@ -60,22 +60,22 @@ export const PATCH = async (
 
 export const DELETE = async (
   _: NextRequest,
-  context: { params: { id: number } }
+  context: { params: { id: string } }
 ) => {
   const r = { ...response };
   const { id } = context.params;
   try {
-    const deleted = await prisma.client.delete({ where: { id: Number(id) } });
+    const deleted = await prisma.product.delete({ where: { id } });
     r.response = {
       status: "success",
-      message: "delete client success",
+      message: "delete product success",
       data: deleted,
     };
     r.statusCode = 200;
   } catch (err) {
     r.response = {
       status: "failed",
-      message: "delete client failed",
+      message: "delete product failed",
       data: err,
     };
     r.statusCode = 400;
