@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "vercel:build": "yarn prebuild && yarn build",
-    "prebuild": "yarn prisma",
-    "prisma": "yarn prisma generate",
-    "migrate": "dotenv -e .env.development.local -- yarn prisma db push"
+    "prebuild": "yarn db",
+    "db": "yarn prisma:g",
+    "prisma:g": "yarn prisma generate",
+    "prisma:m": "dotenv -e .env.development.local -- yarn prisma db push"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
