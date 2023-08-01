@@ -31,6 +31,7 @@ model Product {
   updatedAt DateTime @updatedAt
   name      String
   price     Int
+  note      String?
   orders    Order[]
 }
 
@@ -38,6 +39,7 @@ model Order {
   id        String    @id @default(uuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  note      String?
   client    Client    @relation(fields: [clientId], references: [id])
   clientId  Int
   products  Product[]
