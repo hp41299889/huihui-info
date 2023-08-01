@@ -29,7 +29,9 @@ export const POST = async (req: NextRequest) => {
   const r = { ...response };
   const payload: PostProduct = await req.json();
   try {
-    const created = await prisma.product.create({ data: { ...payload } });
+    const created = await prisma.product.create({
+      data: { ...payload, price: Number(payload.price) },
+    });
     r.response = {
       status: "success",
       message: "create product success",
@@ -43,6 +45,7 @@ export const POST = async (req: NextRequest) => {
       data: err,
     };
     r.statusCode = 400;
+    console.error(err);
   }
   return apiResponse(r);
 };

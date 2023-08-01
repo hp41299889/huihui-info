@@ -1,5 +1,3 @@
-import { Dayjs } from "dayjs";
-
 export interface PostClient {
   email: string;
   name: string;
