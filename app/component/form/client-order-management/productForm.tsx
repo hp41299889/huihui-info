@@ -6,13 +6,14 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   TextField,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useForm } from "react-hook-form";
 
 import ModalAction from "@/app/component/modal/modalAction";
-import { ProductFormProps } from "./interface";
+import { FormProps } from "./interface";
 import {
   PatchProduct,
   PostProduct,
@@ -24,12 +25,17 @@ import {
 } from "@/util/client/api/background-management-system/client-order-management";
 import { useDispatch } from "@/util/lib/redux/store";
 import { setAppFeedbackSnackbar } from "@/util/lib/redux/slice/app/slice";
+import { Product } from "@/app/home/collection/background-management-system/client-order-management/interface";
 
 interface FormData extends PostProduct {
   confirm: boolean;
 }
 
-const ProductForm: FC<ProductFormProps> = (props: ProductFormProps) => {
+interface Props extends FormProps {
+  data: Product | null;
+}
+
+const ProductForm: FC<Props> = (props: Props) => {
   const { open, type, data, onClose, afterAction } = props;
   const dispatch = useDispatch();
   const {
@@ -46,11 +52,16 @@ const ProductForm: FC<ProductFormProps> = (props: ProductFormProps) => {
   });
 
   const onSubmit = async (formData: FormData) => {
-    const { confirm, ...payload } = formData;
+    const { name, price, note } = formData;
     switch (type) {
       case "create": {
         setValue("confirm", true);
         try {
+          const payload: PostProduct = {
+            name,
+            price,
+            note,
+          };
           const res = await postProduct(payload);
           if (res.data.status === "success") {
             onClose();
@@ -78,7 +89,12 @@ const ProductForm: FC<ProductFormProps> = (props: ProductFormProps) => {
       case "edit": {
         setValue("confirm", true);
         try {
-          const res = await patchProduct(data?.id!, payload);
+          const p: PatchProduct = {
+            name,
+            price,
+            note,
+          };
+          const res = await patchProduct(data?.uid!, p);
           if (res.data.status === "success") {
             onClose();
             dispatch(
@@ -104,7 +120,7 @@ const ProductForm: FC<ProductFormProps> = (props: ProductFormProps) => {
       }
       case "delete": {
         try {
-          const res = await deleteProduct(data?.id!);
+          const res = await deleteProduct(data?.uid!);
           if (res.data.status === "success") {
             onClose();
             dispatch(
@@ -133,20 +149,19 @@ const ProductForm: FC<ProductFormProps> = (props: ProductFormProps) => {
 
   useEffect(() => {
     reset({
-      name: data?.name,
-      price: data?.price,
-      note: data?.note,
+      ...data,
     });
   }, [data, reset]);
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>
         {type === "create" && "新增"}
         {type === "edit" && "編輯"}
         {type === "delete" && "刪除"}
         產品表單
       </DialogTitle>
+      <Divider />
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           {type === "delete" ? (
@@ -162,6 +177,7 @@ const ProductForm: FC<ProductFormProps> = (props: ProductFormProps) => {
                   label="名稱"
                   fullWidth
                   {...register("name", { required: true })}
+                  disabled={type === "watch"}
                   error={Boolean(errors.name)}
                   helperText={errors.name && "名稱為必填"}
                 />
@@ -173,6 +189,7 @@ const ProductForm: FC<ProductFormProps> = (props: ProductFormProps) => {
                   type="number"
                   fullWidth
                   {...register("price", { required: true })}
+                  disabled={type === "watch"}
                   error={Boolean(errors.price)}
                   helperText={errors.price && "售價為必填"}
                 />
@@ -183,11 +200,13 @@ const ProductForm: FC<ProductFormProps> = (props: ProductFormProps) => {
                   label="備註"
                   fullWidth
                   {...register("note")}
+                  disabled={type === "watch"}
                 />
               </Grid>
             </Grid>
           )}
         </DialogContent>
+        <Divider />
         <ModalAction type={type} control={control} onClose={onClose} />
       </Box>
     </Dialog>

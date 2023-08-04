@@ -79,6 +79,7 @@ export const DELETE = async (
       data: err,
     };
     r.statusCode = 400;
+    console.error(err);
   }
   return apiResponse(r);
 };

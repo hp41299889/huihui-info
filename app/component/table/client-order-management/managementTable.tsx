@@ -1,4 +1,4 @@
-import { FC, useEffect, ReactNode, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   TableContainer,
   Table,
@@ -14,36 +14,47 @@ import {
   Tooltip,
   CircularProgress,
 } from "@mui/material";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import { TableMetadata, TableHook } from "./interface";
 import {
   FormProps,
   FormType,
 } from "@/app/component/form/client-order-management/interface";
+import {
+  Client,
+  Order,
+  Product,
+} from "@/app/home/collection/background-management-system/client-order-management/interface";
 
 interface Props {
   title: string;
   metadata: TableMetadata[];
-  useData: TableHook;
-  Form: FC<FormProps>;
+  useData: TableHook<Client | Product | Order>;
+  Form: React.ComponentType<FormProps>;
 }
 
 const ManagementTable: FC<Props> = (props: Props) => {
   const { title, metadata, useData, Form } = props;
   const { data, fetcher, loading } = useData();
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState<Client | Product | Order | null>(
+    null
+  );
   const [formType, setFormType] = useState<FormType>("create");
   const [formModal, setFormModal] = useState<boolean>(false);
 
   const onClickNewData = () => {
     setFormType("create");
-    setSelected(undefined);
+    setSelected(null);
+    setFormModal(true);
+  };
+
+  const onClickWatchData = (data: any) => {
+    setFormType("watch");
+    setSelected(data);
     setFormModal(true);
   };
 
   const onClickEditData = (data: any) => {
-    console.log(data);
-
     setFormType("edit");
     setSelected(data);
     setFormModal(true);
@@ -54,6 +65,7 @@ const ManagementTable: FC<Props> = (props: Props) => {
     setSelected(data);
     setFormModal(true);
   };
+
   useEffect(() => {
     fetcher();
   }, [fetcher]);
@@ -93,11 +105,19 @@ const ManagementTable: FC<Props> = (props: Props) => {
                   <TableRow key={`${title}_${i}`}>
                     {metadata.map((m, i) => (
                       <TableCell key={m.key}>
-                        {m.preDisplay ? m.preDisplay(d[m.key]) : d[m.key]}
+                        {m.preDisplay ? m.preDisplay(d) : d[m.key]}
                       </TableCell>
                     ))}
                     <TableCell>
                       <Stack direction="row">
+                        <Tooltip
+                          title="查看"
+                          onClick={() => onClickWatchData(d)}
+                        >
+                          <IconButton>
+                            <Visibility />
+                          </IconButton>
+                        </Tooltip>
                         <Tooltip title="編輯">
                           <IconButton onClick={() => onClickEditData(d)}>
                             <Edit />

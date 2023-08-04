@@ -46,7 +46,11 @@ const ModalAction: FC<Props> = (props: Props) => {
           )}
         </Container>
         <Stack direction="row" spacing={1}>
-          <Button variant="contained" type="submit">
+          <Button
+            variant="contained"
+            type="submit"
+            onClick={type === "watch" ? onClose : undefined}
+          >
             確認
           </Button>
           <Button variant="contained" onClick={onClose}>
