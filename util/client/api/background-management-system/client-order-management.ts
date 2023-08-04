@@ -3,6 +3,10 @@ import {
   PostClient,
 } from "@/app/api/background-management-system/client-order-management/client/interface";
 import {
+  PatchOrder,
+  PostOrder,
+} from "@/app/api/background-management-system/client-order-management/order/interface";
+import {
   PatchProduct,
   PostProduct,
 } from "@/app/api/background-management-system/client-order-management/product/interface";
@@ -36,12 +40,12 @@ export const postProduct = async (payload: PostProduct) => {
   return nextApi.post(`${apiUrl}/product`, payload);
 };
 
-export const patchProduct = async (id: string, payload: PatchProduct) => {
-  return nextApi.patch(`${apiUrl}/product/${id}`, payload);
+export const patchProduct = async (uid: string, payload: PatchProduct) => {
+  return nextApi.patch(`${apiUrl}/product/${uid}`, payload);
 };
 
-export const deleteProduct = async (id: string) => {
-  return nextApi.delete(`${apiUrl}/product/${id}`);
+export const deleteProduct = async (uid: string) => {
+  return nextApi.delete(`${apiUrl}/product/${uid}`);
 };
 
 // order
@@ -49,14 +53,14 @@ export const getOrders = async () => {
   return nextApi.get(`${apiUrl}/order`);
 };
 
-export const postOrder = async () => {
-  return nextApi.post(`${apiUrl}/order`);
+export const postOrder = async (payload: PostOrder) => {
+  return nextApi.post(`${apiUrl}/order`, payload);
 };
 
-export const patchOrder = async () => {
-  return nextApi.patch(`${apiUrl}/order`);
+export const patchOrder = async (uid: string, payload: PatchOrder) => {
+  return nextApi.patch(`${apiUrl}/order/${uid}`, payload);
 };
 
-export const deleteOrder = async () => {
-  return nextApi.delete(`${apiUrl}/order`);
+export const deleteOrder = async (uid: string) => {
+  return nextApi.delete(`${apiUrl}/order/${uid}`);
 };

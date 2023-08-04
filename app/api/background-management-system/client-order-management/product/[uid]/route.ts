@@ -6,12 +6,12 @@ import { PatchProduct } from "../interface";
 
 export const GET = async (
   _: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { uid: string } }
 ) => {
   const r = { ...response };
-  const { id } = context.params;
+  const { uid } = context.params;
   try {
-    const finded = await prisma.product.findFirst({ where: { id } });
+    const finded = await prisma.product.findFirst({ where: { uid } });
     r.response = {
       status: "success",
       message: "read product success",
@@ -31,14 +31,14 @@ export const GET = async (
 
 export const PATCH = async (
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { uid: string } }
 ) => {
   const r = { ...response };
-  const { id } = context.params;
+  const { uid } = context.params;
   try {
     const payload: PatchProduct = await req.json();
     const updated = await prisma.product.update({
-      where: { id },
+      where: { uid },
       data: payload,
     });
     r.response = {
@@ -54,18 +54,19 @@ export const PATCH = async (
       data: err,
     };
     r.statusCode = 400;
+    console.error(err);
   }
   return apiResponse(r);
 };
 
 export const DELETE = async (
   _: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { uid: string } }
 ) => {
   const r = { ...response };
-  const { id } = context.params;
+  const { uid } = context.params;
   try {
-    const deleted = await prisma.product.delete({ where: { id } });
+    const deleted = await prisma.product.delete({ where: { uid } });
     r.response = {
       status: "success",
       message: "delete product success",
