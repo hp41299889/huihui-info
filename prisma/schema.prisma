@@ -26,21 +26,36 @@ model Client {
 }
 
 model Product {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  price     Int
-  note      String?
-  orders    Order[]
+  uid           String         @id @default(uuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  name          String
+  price         Int
+  note          String?
+  orderProducts OrderProduct[]
 }
 
 model Order {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  note      String?
-  client    Client    @relation(fields: [clientId], references: [id])
-  clientId  Int
-  products  Product[]
+  uid           String         @id @default(uuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  date          DateTime
+  note          String?
+  client        Client         @relation(fields: [clientId], references: [id])
+  clientId      Int
+  orderProducts OrderProduct[]
+}
+
+model OrderProduct {
+  uid        String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  amount     Int
+  note       String?
+  order      Order    @relation(fields: [orderUid], references: [uid])
+  orderUid   String
+  product    Product  @relation(fields: [productUid], references: [uid])
+  productUid String
+
+  @@unique([orderUid, productUid])
 }

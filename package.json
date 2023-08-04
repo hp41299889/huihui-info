@@ -10,7 +10,8 @@
     "prebuild": "yarn db",
     "db": "yarn prisma:g",
     "prisma:g": "yarn prisma generate",
-    "prisma:m": "dotenv -e .env.development.local -- yarn prisma db push"
+    "prisma:prem": "yarn prisma format && yarn prisma:g",
+    "prisma:m": "yarn prisma:prem && dotenv -e .env.development.local -- yarn prisma db push"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -21,6 +22,7 @@
     "@prisma/client": "^5.0.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/lodash": "^4.14.196",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
@@ -34,6 +36,7 @@
     "googleapis": "^123.0.0",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",
+    "lodash": "^4.17.21",
     "next": "13.4.11",
     "pg": "^8.11.1",
     "postcss": "8.4.26",

@@ -1,12 +1,11 @@
+import { ReactNode } from "react";
+
 export interface TableMetadata {
   key: string;
   label: string;
-  preDisplay?: Function;
+  preDisplay?: (value: any) => string | number | ReactNode;
 }
 
-export type TableHook = () => {
-  // TODO do not use any
-  data: any[];
-  fetcher: () => Promise<void>;
-  loading: boolean;
-};
+export interface TableHook<T> {
+  (): { data: T[]; fetcher: () => Promise<void>; loading: boolean };
+}

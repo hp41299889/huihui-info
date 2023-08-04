@@ -12,7 +12,7 @@ import {
 } from "@/util/client/api/background-management-system/client-order-management";
 import { TableHook } from "./interface";
 
-export const useClients: TableHook = () => {
+export const useClients: TableHook<Client> = () => {
   const [data, setData] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -32,7 +32,7 @@ export const useClients: TableHook = () => {
   return { data, fetcher, loading };
 };
 
-export const useProducts: TableHook = () => {
+export const useProducts: TableHook<Product> = () => {
   const [data, setData] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -52,7 +52,7 @@ export const useProducts: TableHook = () => {
   return { data, fetcher, loading };
 };
 
-export const useOrders: TableHook = () => {
+export const useOrders: TableHook<Order> = () => {
   const [data, setData] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 

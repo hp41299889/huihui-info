@@ -2,19 +2,12 @@ import { FC, useEffect } from "react";
 import {
   Dialog,
   Box,
-  Button,
   TextField,
   DialogTitle,
   DialogContent,
-  DialogActions,
   Alert,
   AlertTitle,
-  Stack,
-  Container,
-  FormControlLabel,
-  Checkbox,
-  FormHelperText,
-  FormControl,
+  Divider,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -32,15 +25,20 @@ import {
   postClient,
 } from "@/util/client/api/background-management-system/client-order-management";
 import { setAppFeedbackSnackbar } from "@/util/lib/redux/slice/app/slice";
-import { ClientFormProps } from "./interface";
+import { FormProps } from "./interface";
 import ModalAction from "@/app/component/modal/modalAction";
+import { Client } from "@/app/home/collection/background-management-system/client-order-management/interface";
 
 interface FormData extends Omit<PostClient, "birth"> {
   birth: Dayjs;
   confirm: boolean;
 }
 
-const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
+interface Props extends FormProps {
+  data: Client | null;
+}
+
+const ClientForm: FC<Props> = (props: Props) => {
   const { open, type, data, onClose, afterAction } = props;
   const dispatch = useDispatch();
   const {
@@ -58,13 +56,17 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
   });
 
   const onSubmit = async (formData: FormData) => {
-    const { confirm, ...payload } = formData;
+    const { name, phone, birth, address, email, note } = formData;
     switch (type) {
       case "create": {
         setValue("confirm", true);
         const p: PostClient = {
-          ...payload,
-          birth: formData.birth.toISOString(),
+          name,
+          phone,
+          address,
+          email,
+          note,
+          birth: birth.toISOString(),
         };
         try {
           const res = await postClient(p);
@@ -94,8 +96,12 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
       case "edit": {
         setValue("confirm", true);
         const p: PatchClient = {
-          ...payload,
-          birth: formData.birth.toISOString(),
+          name,
+          phone,
+          address,
+          email,
+          note,
+          birth: birth.toISOString(),
         };
         try {
           const res = await patchClient(data?.id!, p);
@@ -153,23 +159,20 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
 
   useEffect(() => {
     reset({
-      email: data?.email,
-      name: data?.name,
-      phone: data?.phone,
-      address: data?.address,
-      note: data?.note,
+      ...data,
       birth: dayjs(data?.birth),
     });
   }, [data, reset]);
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>
         {type === "create" && "新增"}
         {type === "edit" && "編輯"}
         {type === "delete" && "刪除"}
         客戶表單
       </DialogTitle>
+      <Divider />
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           {type === "delete" ? (
@@ -183,6 +186,7 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
                 <TextField
                   id="name"
                   label="姓名"
+                  disabled={type === "watch"}
                   fullWidth
                   {...register("name", { required: true })}
                   error={Boolean(errors.name)}
@@ -193,6 +197,7 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
                 <TextField
                   id="phone"
                   label="連絡電話"
+                  disabled={type === "watch"}
                   fullWidth
                   {...register("phone", { required: true })}
                   error={Boolean(errors.phone)}
@@ -212,6 +217,7 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
                       label="出生日期"
                       value={value}
                       onChange={onChange}
+                      disabled={type === "watch"}
                       format="YYYY/MM/DD"
                       slotProps={{
                         textField: {
@@ -229,6 +235,7 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
                   id="address"
                   label="地址"
                   fullWidth
+                  disabled={type === "watch"}
                   {...register("address", { required: true })}
                   error={Boolean(errors.address)}
                   helperText={errors.address && "地址為必填"}
@@ -239,6 +246,7 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
                   id="email"
                   label="E-mail"
                   fullWidth
+                  disabled={type === "watch"}
                   {...register("email", { required: true })}
                   error={Boolean(errors.email)}
                   helperText={errors.email && "E-mail為必填"}
@@ -249,12 +257,14 @@ const ClientForm: FC<ClientFormProps> = (props: ClientFormProps) => {
                   id="note"
                   label="備註"
                   fullWidth
+                  disabled={type === "watch"}
                   {...register("note")}
                 />
               </Grid>
             </Grid>
           )}
         </DialogContent>
+        <Divider />
         <ModalAction type={type} control={control} onClose={onClose} />
       </Box>
     </Dialog>
