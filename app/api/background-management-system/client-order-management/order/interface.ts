@@ -1,12 +1,12 @@
 export interface PostOrder {
-  clientId: number;
+  clientId: string | number;
   date: string;
   note?: string;
   orderProducts: ProductListItem[];
 }
 
 export interface PatchOrder {
-  clientId?: number;
+  clientId?: string | number;
   date?: string;
   note?: string;
   orderProducts?: ProductListItem[];
@@ -14,6 +14,6 @@ export interface PatchOrder {
 
 interface ProductListItem {
   productUid: string;
-  amount: number;
+  amount: string | number;
   note?: string;
 }

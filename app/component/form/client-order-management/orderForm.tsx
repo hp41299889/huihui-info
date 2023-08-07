@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import dayjs, { Dayjs } from "dayjs";
 
 import ModalAction from "@/app/component/modal/modalAction";
@@ -51,6 +51,15 @@ interface FormData extends Omit<PostOrder, "date"> {
   date: Dayjs;
 }
 
+const initData: FormData = {
+  clientId: "",
+  date: dayjs(),
+  note: "",
+  orderProducts: [],
+  confirm: false,
+  client: { name: "" },
+};
+
 interface Props extends FormProps {
   data: Order | null;
 }
@@ -77,16 +86,17 @@ const OrderForm: FC<Props> = (props: Props) => {
     reset,
     setValue,
     formState: { errors },
-  } = useForm<FormData>({
-    defaultValues: {
-      confirm: false,
-    },
-  });
+  } = useForm<FormData>({ defaultValues: initData });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "orderProducts",
   });
+
+  const orderProductsWatcher = useWatch({ name: "orderProducts", control });
+  const orderProductsFilter = products.filter(
+    (p) => !orderProductsWatcher.map((op) => op.productUid).includes(p.uid)
+  );
 
   const onSubmit = async (formData: FormData) => {
     const { clientId, date, note, orderProducts } = formData;
@@ -195,26 +205,23 @@ const OrderForm: FC<Props> = (props: Props) => {
   }, [fetchProducts]);
 
   useEffect(() => {
-    const subTotle = fields.reduce((acc, cur) => {
+    const subTotal = orderProductsWatcher.reduce((acc, cur) => {
       const target = products.find((p) => p.uid === cur.productUid);
       if (target) {
-        const toAdd = target.price * cur.amount;
+        const toAdd = target.price * Number(cur.amount);
         acc += toAdd;
       }
       return acc;
     }, 0);
-    setSubTotal(subTotle);
-  }, [fields, products]);
+    setSubTotal(subTotal);
+  }, [orderProductsWatcher, products]);
 
   useEffect(() => {
-    reset({
-      ...data,
-      date: dayjs(data?.date),
-    });
+    data ? reset({ ...data, date: dayjs(data?.date) }) : reset(initData);
   }, [data, reset]);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth={"md"}>
       <DialogTitle>
         {type === "create" && "新增"}
         {type === "edit" && "編輯"}
@@ -235,20 +242,37 @@ const OrderForm: FC<Props> = (props: Props) => {
                 <Controller
                   name="clientId"
                   control={control}
-                  render={({ field: { onChange, value } }) => (
+                  rules={{ required: "客戶姓名為必填" }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
                     <Autocomplete
-                      value={clients.find((c) => c.id === value)}
-                      onChange={(_, newVlaue) => {
-                        onChange(newVlaue?.id ? newVlaue.id : 0);
-                      }}
-                      isOptionEqualToValue={(option, value) =>
-                        option.id === value.id
+                      id="clientId"
+                      value={
+                        clients.find((client) => client.id === value) || null
                       }
                       options={clients}
                       loading={loadingClients}
                       getOptionLabel={(o: Client) => o.name}
+                      onChange={(_, newVlaue) => {
+                        onChange(newVlaue?.id ? newVlaue.id : "");
+                      }}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
+                      renderOption={(props, option) => (
+                        <li {...props} key={option.name}>
+                          {option.name}
+                        </li>
+                      )}
                       renderInput={(params) => (
-                        <TextField {...params} label="客戶姓名" />
+                        <TextField
+                          {...params}
+                          label="客戶姓名"
+                          error={!!error}
+                          helperText={error?.message}
+                        />
                       )}
                       fullWidth
                       disabled={type === "watch"}
@@ -281,43 +305,58 @@ const OrderForm: FC<Props> = (props: Props) => {
                 />
               </Grid>
               <Grid lg={12}>
-                <Stack direction="row">
-                  <Typography>List</Typography>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Typography>訂單清單</Typography>
                   {type !== "watch" && (
                     <Button
                       variant="outlined"
                       startIcon={<Add />}
                       onClick={() => {
-                        append({ productUid: "", amount: 0 });
+                        append({ productUid: "", amount: "" });
                       }}
                     >
                       Add
                     </Button>
                   )}
                 </Stack>
-                <List>
+                <List sx={{ width: "100%" }}>
                   {fields.map((l, i) => (
                     <ListItem key={l.id}>
                       <Stack direction="row" spacing={2}>
                         <Controller
                           name={`orderProducts.${i}.productUid`}
                           control={control}
-                          render={({ field: { onChange, value } }) => (
+                          rules={{ required: "產品名稱為必填" }}
+                          render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                          }) => (
                             <Autocomplete
-                              // TODO a props object a key warning
-                              value={products.find((p) => p.uid === value)}
+                              id="listItems"
+                              value={
+                                products.find(
+                                  (product) => product.uid === value
+                                ) || null
+                              }
+                              options={orderProductsFilter}
                               loading={loadingProducts}
+                              getOptionLabel={(o: Product) => o.name}
                               onChange={(_, v) => onChange(v?.uid)}
-                              options={products}
                               isOptionEqualToValue={(option, value) =>
                                 option.id === value.id
                               }
-                              getOptionLabel={(o: Product) => o.name}
+                              renderOption={(props, option) => (
+                                <li {...props} key={option.name}>
+                                  {option.name}
+                                </li>
+                              )}
                               renderInput={(params) => (
                                 <TextField
                                   {...params}
                                   key={`p_${l.id}`}
                                   label="產品名稱"
+                                  error={!!error}
+                                  helperText={error?.message}
                                 />
                               )}
                               fullWidth
@@ -325,13 +364,26 @@ const OrderForm: FC<Props> = (props: Props) => {
                             />
                           )}
                         />
-                        <TextField
-                          id="amount"
-                          label="數量"
-                          type="number"
-                          fullWidth
-                          {...register(`orderProducts.${i}.amount`)}
-                          disabled={type === "watch"}
+                        <Controller
+                          name={`orderProducts.${i}.amount`}
+                          control={control}
+                          rules={{ required: "數量為必填" }}
+                          render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                          }) => (
+                            <TextField
+                              id="amount"
+                              value={value ? value : null}
+                              onChange={(e) => onChange(Number(e.target.value))}
+                              label="數量"
+                              type="number"
+                              fullWidth
+                              disabled={type === "watch"}
+                              error={!!error}
+                              helperText={error?.message}
+                            />
+                          )}
                         />
                         <TextField
                           id="note"
