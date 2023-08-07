@@ -42,25 +42,30 @@ const ManagementTable: FC<Props> = (props: Props) => {
   const [formType, setFormType] = useState<FormType>("create");
   const [formModal, setFormModal] = useState<boolean>(false);
 
+  const onClose = () => {
+    setFormModal(false);
+    setSelected(null);
+  };
+
   const onClickNewData = () => {
     setFormType("create");
     setSelected(null);
     setFormModal(true);
   };
 
-  const onClickWatchData = (data: any) => {
+  const onClickWatchData = (data: Client | Product | Order | null) => {
     setFormType("watch");
     setSelected(data);
     setFormModal(true);
   };
 
-  const onClickEditData = (data: any) => {
+  const onClickEditData = (data: Client | Product | Order | null) => {
     setFormType("edit");
     setSelected(data);
     setFormModal(true);
   };
 
-  const onClickDeleteData = (data: any) => {
+  const onClickDeleteData = (data: Client | Product | Order | null) => {
     setFormType("delete");
     setSelected(data);
     setFormModal(true);
@@ -139,7 +144,7 @@ const ManagementTable: FC<Props> = (props: Props) => {
             open={formModal}
             type={formType}
             data={selected}
-            onClose={() => setFormModal(false)}
+            onClose={onClose}
             afterAction={fetcher}
           />
         </>

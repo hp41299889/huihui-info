@@ -35,7 +35,7 @@ export const PATCH = async (
         ...p,
         client: {
           connect: {
-            id: clientId,
+            id: Number(clientId),
           },
         },
       },
@@ -51,7 +51,7 @@ export const PATCH = async (
                 },
               },
               data: {
-                amount: product.amount,
+                amount: Number(product.amount),
                 note: product.note,
               },
             })

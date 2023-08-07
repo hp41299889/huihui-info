@@ -48,7 +48,7 @@ export const POST = async (req: NextRequest) => {
     const orderData: OrderCreateInput = {
       client: {
         connect: {
-          id: clientId,
+          id: Number(clientId),
         },
       },
       date: dayjs(date).toISOString(),
