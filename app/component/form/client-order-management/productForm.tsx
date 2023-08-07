@@ -31,6 +31,13 @@ interface FormData extends PostProduct {
   confirm: boolean;
 }
 
+const initData: FormData = {
+  name: "",
+  price: 0,
+  note: "",
+  confirm: false,
+};
+
 interface Props extends FormProps {
   data: Product | null;
 }
@@ -46,9 +53,7 @@ const ProductForm: FC<Props> = (props: Props) => {
     setValue,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      confirm: false,
-    },
+    defaultValues: initData,
   });
 
   const onSubmit = async (formData: FormData) => {
@@ -148,9 +153,7 @@ const ProductForm: FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    reset({
-      ...data,
-    });
+    data ? reset({ ...data }) : reset(initData);
   }, [data, reset]);
 
   return (

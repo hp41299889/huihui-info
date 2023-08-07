@@ -34,6 +34,16 @@ interface FormData extends Omit<PostClient, "birth"> {
   confirm: boolean;
 }
 
+const initData: FormData = {
+  email: "",
+  name: "",
+  phone: "",
+  birth: dayjs(),
+  address: "",
+  note: "",
+  confirm: false,
+};
+
 interface Props extends FormProps {
   data: Client | null;
 }
@@ -49,10 +59,7 @@ const ClientForm: FC<Props> = (props: Props) => {
     setValue,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      birth: dayjs(),
-      confirm: false,
-    },
+    defaultValues: initData,
   });
 
   const onSubmit = async (formData: FormData) => {
@@ -158,10 +165,7 @@ const ClientForm: FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    reset({
-      ...data,
-      birth: dayjs(data?.birth),
-    });
+    data ? reset({ ...data, birth: dayjs(data.birth) }) : reset(initData);
   }, [data, reset]);
 
   return (
