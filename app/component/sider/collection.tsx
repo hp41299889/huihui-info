@@ -18,13 +18,26 @@ interface Item {
 }
 
 const items: Item[] = [
+  // {
+  //   label: "靜態網頁",
+  //   children: [
+  //     {
+  //       label: "台灣新聞爬蟲",
+  //       href: "/home/collection/static-web/news",
+  //     },
+  //   ],
+  // },
   {
-    label: "靜態網頁",
+    label: "動態網頁",
     children: [
-      // {
-      //   label: "123",
-      //   href: "/home/collection/static-web/123",
-      // },
+      {
+        label: "電商網頁",
+        href: "/home/collection/dynamic-web/ecommerce",
+      },
+      {
+        label: "網頁聊天室",
+        href: "/home/collection/dynamic-web/chat-room",
+      },
     ],
   },
   {
