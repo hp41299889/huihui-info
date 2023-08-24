@@ -1,5 +1,4 @@
 "use client";
-import { FC } from "react";
 import {
   FormControl,
   TextField,
@@ -13,7 +12,7 @@ interface Props {
   onSwitchToLogin: () => void;
 }
 
-const RegisterForm: FC<Props> = (props: Props) => {
+const RegisterForm = (props: Props) => {
   const { onSwitchToLogin } = props;
   const {
     register,

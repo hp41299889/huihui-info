@@ -2,9 +2,9 @@
 import { ReactNode } from "react";
 import { Snackbar, Alert } from "@mui/material";
 
-import { useDispatch, useSelector } from "@/util/lib/redux/store";
-import { selectAppFeedbackSnackbar } from "@/util/lib/redux/slice/app/selector";
-import { setAppFeedbackSnackbar } from "@/util/lib/redux/slice/app/slice";
+import { useDispatch, useSelector } from "@/util/client/redux";
+import { selectAppFeedbackSnackbar } from "@/util/client/redux/slice/app";
+import { setAppFeedbackSnackbar } from "@/util/client/redux/slice/app";
 
 const GlobalComponent = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();

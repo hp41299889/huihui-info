@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { Container, Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
@@ -9,7 +9,7 @@ import RegisterForm from "../component/form/register";
 
 type FormType = "login" | "register";
 
-const Page: FC = () => {
+const Page = () => {
   const [formType, setFormType] = useState<FormType>("login");
 
   return (

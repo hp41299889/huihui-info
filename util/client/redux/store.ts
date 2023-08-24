@@ -10,7 +10,7 @@ import {
 } from "react-redux";
 
 import { authSlice } from "./slice/auth/slice";
-import { appSlice } from "./slice/app/slice";
+import { appSlice } from "./slice/app";
 
 export const reduxStore = configureStore({
   reducer: {

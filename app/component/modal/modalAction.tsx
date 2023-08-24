@@ -8,7 +8,6 @@ import {
   FormHelperText,
   Stack,
 } from "@mui/material";
-import { FC } from "react";
 import { Controller, Control } from "react-hook-form";
 
 import { FormType } from "@/app/component/form/client-order-management/interface";
@@ -19,7 +18,7 @@ interface Props {
   onClose: () => void;
 }
 
-const ModalAction: FC<Props> = (props: Props) => {
+const ModalAction = (props: Props) => {
   const { type, control, onClose } = props;
   return (
     <DialogActions>

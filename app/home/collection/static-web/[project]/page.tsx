@@ -1,8 +1,7 @@
 "use client";
-import { FC } from "react";
 import { useParams } from "next/navigation";
 
-const Page: FC = () => {
+const Page = () => {
   const params = useParams();
   console.log(params);
 

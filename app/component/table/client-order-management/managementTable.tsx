@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TableContainer,
   Table,
@@ -15,6 +15,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
+
 import { TableMetadata, TableHook } from "./interface";
 import {
   FormProps,
@@ -24,7 +25,7 @@ import {
   Client,
   Order,
   Product,
-} from "@/app/home/collection/background-management-system/client-order-management/interface";
+} from "@/app/api/background-management-system/interface";
 
 interface Props {
   title: string;
@@ -33,7 +34,7 @@ interface Props {
   Form: React.ComponentType<FormProps>;
 }
 
-const ManagementTable: FC<Props> = (props: Props) => {
+const ManagementTable = (props: Props) => {
   const { title, metadata, useData, Form } = props;
   const { data, fetcher, loading } = useData();
   const [selected, setSelected] = useState<Client | Product | Order | null>(

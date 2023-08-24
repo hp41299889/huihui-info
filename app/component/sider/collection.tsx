@@ -8,7 +8,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { FC, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 interface Item {
@@ -46,7 +46,7 @@ const items: Item[] = [
     ],
   },
 ];
-const CollectionSider: FC = () => {
+const CollectionSider = () => {
   const [open, setOpen] = useState<boolean[]>(items.map(() => false));
   const params = useParams();
 
