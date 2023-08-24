@@ -9,13 +9,13 @@ import {
   AlertColor,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { postContact } from "@/util/client/api";
 import { PostContact } from "@/app/api/contact/interface";
 
-const Page: FC = () => {
+const Page = () => {
   const [snackbar, setSnackbar] = useState<boolean>(false);
   const [snackbarType, setSnackbarType] = useState<AlertColor>("error");
 

@@ -1,11 +1,10 @@
-import { FC } from "react";
 import Image from "next/image";
 import { Box, Stack } from "@mui/material";
 import Link from "next/link";
 
 import { messengers } from "./option";
 
-const Messenger: FC = () => {
+const Messenger = () => {
   return (
     <Box position="fixed" bottom={24} right={24}>
       <Stack rowGap={2}>

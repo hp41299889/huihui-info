@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jeset --watchAll",
+    "test:watch": "jest --watchAll",
     "prebuild": "yarn db",
     "db": "yarn prisma:g",
     "prisma:g": "yarn prisma generate",

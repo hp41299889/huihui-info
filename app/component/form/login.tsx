@@ -1,5 +1,4 @@
 "use client";
-import { FC } from "react";
 import {
   FormControl,
   TextField,
@@ -9,15 +8,15 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 
-import { useDispatch } from "@/util/lib/redux/store";
-import { loginThunk } from "@/util/lib/redux/slice/auth/thnuk";
+import { useDispatch } from "@/util/client/redux";
+import { loginThunk } from "@/util/client/redux/slice/auth";
 import { PostLogin } from "@/app/api/login/interface";
 
 interface Props {
   onSwitchToRegister: () => void;
 }
 
-const LoginForm: FC<Props> = (props: Props) => {
+const LoginForm = (props: Props) => {
   const { onSwitchToRegister } = props;
   const dispatch = useDispatch();
   const {

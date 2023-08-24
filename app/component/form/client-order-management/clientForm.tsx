@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Dialog,
   Box,
@@ -15,19 +15,15 @@ import dayjs, { Dayjs } from "dayjs";
 import { useForm, Controller } from "react-hook-form";
 
 import {
+  Client,
   PatchClient,
   PostClient,
-} from "@/app/api/background-management-system/client-order-management/client/interface";
-import { useDispatch } from "@/util/lib/redux/store";
-import {
-  deleteClient,
-  patchClient,
-  postClient,
-} from "@/util/client/api/background-management-system/client-order-management";
-import { setAppFeedbackSnackbar } from "@/util/lib/redux/slice/app/slice";
+} from "@/app/api/background-management-system/interface";
+import { useDispatch } from "@/util/client/redux";
+import { setAppFeedbackSnackbar } from "@/util/client/redux/slice/app";
+import { deleteClient, patchClient, postClient } from "@/util/client/api";
 import { FormProps } from "./interface";
 import ModalAction from "@/app/component/modal/modalAction";
-import { Client } from "@/app/home/collection/background-management-system/client-order-management/interface";
 
 interface FormData extends Omit<PostClient, "birth"> {
   birth: Dayjs;
@@ -48,7 +44,7 @@ interface Props extends FormProps {
   data: Client | null;
 }
 
-const ClientForm: FC<Props> = (props: Props) => {
+const ClientForm = (props: Props) => {
   const { open, type, data, onClose, afterAction } = props;
   const dispatch = useDispatch();
   const {

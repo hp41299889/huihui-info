@@ -1,4 +1,11 @@
-export interface PostClient {
+export interface Client extends PostClient {
+  [key: string]: any;
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PostClient extends PatchClient {
   email: string;
   name: string;
   phone: string;

@@ -11,7 +11,6 @@ import {
 import Grid from "@mui/material/Unstable_Grid2";
 import Image from "next/image";
 import Link from "next/link";
-import { FC } from "react";
 
 interface TechItem {
   title: string;
@@ -51,7 +50,7 @@ const techItems: TechItem[] = [
   },
 ];
 
-const Page: FC = () => {
+const Page = () => {
   return (
     <Box width="60%">
       <Grid container>

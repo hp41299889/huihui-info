@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import { FC } from "react";
 
 interface Props {
   title: string;
@@ -17,7 +16,7 @@ interface Props {
   seeExampleLink: string;
 }
 
-const ServiceCard: FC<Props> = (props: Props) => {
+const ServiceCard = (props: Props) => {
   const { title, contents, seeExampleLink } = props;
   return (
     <Card>

@@ -1,4 +1,3 @@
-export { postLogin } from "./auth";
 export {
   getClients,
   postClient,
@@ -12,5 +11,4 @@ export {
   postOrder,
   patchOrder,
   deleteOrder,
-} from "./background-management-system";
-export { postContact } from "./contact";
+} from "./client-order-management";

@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Alert,
   AlertTitle,
@@ -15,17 +15,13 @@ import { useForm } from "react-hook-form";
 import ModalAction from "@/app/component/modal/modalAction";
 import { FormProps } from "./interface";
 import {
+  Product,
   PatchProduct,
   PostProduct,
-} from "@/app/api/background-management-system/client-order-management/product/interface";
-import {
-  deleteProduct,
-  patchProduct,
-  postProduct,
-} from "@/util/client/api/background-management-system/client-order-management";
-import { useDispatch } from "@/util/lib/redux/store";
-import { setAppFeedbackSnackbar } from "@/util/lib/redux/slice/app/slice";
-import { Product } from "@/app/home/collection/background-management-system/client-order-management/interface";
+} from "@/app/api/background-management-system/interface";
+import { deleteProduct, patchProduct, postProduct } from "@/util/client/api";
+import { useDispatch } from "@/util/client/redux";
+import { setAppFeedbackSnackbar } from "@/util/client/redux/slice/app";
 
 interface FormData extends PostProduct {
   confirm: boolean;
@@ -42,7 +38,7 @@ interface Props extends FormProps {
   data: Product | null;
 }
 
-const ProductForm: FC<Props> = (props: Props) => {
+const ProductForm = (props: Props) => {
   const { open, type, data, onClose, afterAction } = props;
   const dispatch = useDispatch();
   const {

@@ -1,7 +1,6 @@
-import { FC } from "react";
 import { redirect } from "next/navigation";
 
-const Page: FC = () => {
+const Page = () => {
   redirect("/home/aboutme");
 };
 

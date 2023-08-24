@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   AlertTitle,
@@ -20,30 +20,24 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import dayjs, { Dayjs } from "dayjs";
+import { Add, RemoveCircle } from "@mui/icons-material";
 
 import ModalAction from "@/app/component/modal/modalAction";
 import {
   useClients,
   useProducts,
 } from "@/app/component/table/client-order-management/hook";
-import {
-  Client,
-  Order,
-  Product,
-} from "@/app/home/collection/background-management-system/client-order-management/interface";
 import { FormProps } from "./interface";
 import {
+  Client,
+  Product,
+  Order,
   PatchOrder,
   PostOrder,
-} from "@/app/api/background-management-system/client-order-management/order/interface";
-import { Add, RemoveCircle } from "@mui/icons-material";
-import {
-  deleteOrder,
-  patchOrder,
-  postOrder,
-} from "@/util/client/api/background-management-system/client-order-management";
-import { useDispatch } from "@/util/lib/redux/store";
-import { setAppFeedbackSnackbar } from "@/util/lib/redux/slice/app/slice";
+} from "@/app/api/background-management-system/interface";
+import { deleteOrder, patchOrder, postOrder } from "@/util/client/api";
+import { useDispatch } from "@/util/client/redux";
+import { setAppFeedbackSnackbar } from "@/util/client/redux/slice/app";
 
 interface FormData extends Omit<PostOrder, "date"> {
   confirm: boolean;
@@ -64,7 +58,7 @@ interface Props extends FormProps {
   data: Order | null;
 }
 
-const OrderForm: FC<Props> = (props: Props) => {
+const OrderForm = (props: Props) => {
   const { open, type, data, onClose, afterAction } = props;
   const dispatch = useDispatch();
   const {
@@ -343,7 +337,7 @@ const OrderForm: FC<Props> = (props: Props) => {
                               getOptionLabel={(o: Product) => o.name}
                               onChange={(_, v) => onChange(v?.uid)}
                               isOptionEqualToValue={(option, value) =>
-                                option.id === value.id
+                                option.uid === value.uid
                               }
                               renderOption={(props, option) => (
                                 <li {...props} key={option.name}>

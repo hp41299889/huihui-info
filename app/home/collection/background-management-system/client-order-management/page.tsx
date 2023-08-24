@@ -1,6 +1,5 @@
 "use client";
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
-import { FC } from "react";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import _ from "lodash";
 
 import ManagementTable from "@/app/component/table/client-order-management/managementTable";
@@ -14,7 +13,11 @@ import { toLocaleDate, toLocaleDateTime } from "@/util/time";
 import { TableMetadata } from "@/app/component/table/client-order-management/interface";
 import ProductForm from "@/app/component/form/client-order-management/productForm";
 import OrderForm from "@/app/component/form/client-order-management/orderForm";
-import { Client, Order, Product } from "./interface";
+import {
+  Client,
+  Product,
+  Order,
+} from "@/app/api/background-management-system/interface";
 
 const clientMetadata: TableMetadata[] = [
   { key: "name", label: "姓名" },
@@ -79,7 +82,7 @@ const orderMetadata: TableMetadata[] = [
   },
 ];
 
-const Page: FC = () => {
+const Page = () => {
   return (
     <Box
       display="flex"
