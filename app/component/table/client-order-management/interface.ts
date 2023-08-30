@@ -1,9 +1,12 @@
 import { ReactNode } from "react";
 
-export interface TableMetadata {
+export type TableDatas<T> = Array<T> | T[];
+
+export interface TableMetadata<T> {
   key: string;
   label: string;
-  preDisplay?: (value: any) => string | number | ReactNode;
+  preProcess?: (value: T) => ReactNode;
+  width?: string;
 }
 
 export interface TableHook<T> {

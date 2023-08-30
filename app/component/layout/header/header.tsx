@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Typography, Container, Button } from "@mui/material";
 
 import { pages } from "./option";
-import Linker from "@/app/component/link/linker/linker";
+import Link from "@/app/component/link/link";
 
 const Header = () => {
   return (
@@ -14,12 +14,9 @@ const Header = () => {
             </Typography>
           </Button>
           {pages.map((p, i) => (
-            <Linker
-              key={`headerLinker_${i}`}
-              {...p}
-              type="BUTTON"
-              style={{ color: "black" }}
-            />
+            <Link key={`headerLink_${i}`} href={p.href}>
+              {p.label}
+            </Link>
           ))}
         </Toolbar>
       </Container>

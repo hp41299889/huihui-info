@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+"use client";
+import { useState, ComponentType } from "react";
 import {
   TableContainer,
   Table,
@@ -12,34 +13,34 @@ import {
   Box,
   Typography,
   Tooltip,
-  CircularProgress,
 } from "@mui/material";
 import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 
-import { TableMetadata, TableHook } from "./interface";
+import { TableDatas, TableMetadata } from "./interface";
 import {
   FormProps,
   FormType,
-} from "@/app/component/form/client-order-management/interface";
-import {
-  Client,
-  Order,
-  Product,
-} from "@/app/api/background-management-system/interface";
+} from "../../form/client-order-management/interface";
+import { FormData } from "../../form/interface";
 
-interface Props {
-  title: string;
-  metadata: TableMetadata[];
-  useData: TableHook<Client | Product | Order>;
-  Form: React.ComponentType<FormProps>;
+interface DataKey {
+  [key: string]: any;
 }
 
-const ManagementTable = (props: Props) => {
-  const { title, metadata, useData, Form } = props;
-  const { data, fetcher, loading } = useData();
-  const [selected, setSelected] = useState<Client | Product | Order | null>(
-    null
-  );
+interface Props<T> {
+  title: string;
+  metadata: TableMetadata<T>[];
+  datas: TableDatas<T>;
+  Form: ComponentType<FormProps<T>>;
+  afterAction: () => Promise<void>;
+  fields?: {
+    [key: string]: any[];
+  };
+}
+
+const ManagementTable = <T extends DataKey>(props: Props<T>) => {
+  const { title, metadata, datas, Form, afterAction, fields } = props;
+  const [selected, setSelected] = useState<FormData<T>>(null);
   const [formType, setFormType] = useState<FormType>("create");
   const [formModal, setFormModal] = useState<boolean>(false);
 
@@ -48,108 +49,101 @@ const ManagementTable = (props: Props) => {
     setSelected(null);
   };
 
-  const onClickNewData = () => {
+  const onNew = () => {
     setFormType("create");
     setSelected(null);
     setFormModal(true);
   };
 
-  const onClickWatchData = (data: Client | Product | Order | null) => {
+  const onWatch = (d: FormData<T>) => {
     setFormType("watch");
-    setSelected(data);
+    setSelected(d);
     setFormModal(true);
   };
 
-  const onClickEditData = (data: Client | Product | Order | null) => {
+  const onEdit = (d: FormData<T>) => {
     setFormType("edit");
-    setSelected(data);
+    setSelected(d);
     setFormModal(true);
   };
 
-  const onClickDeleteData = (data: Client | Product | Order | null) => {
+  const onDelete = (d: FormData<T>) => {
     setFormType("delete");
-    setSelected(data);
+    setSelected(d);
     setFormModal(true);
   };
-
-  useEffect(() => {
-    fetcher();
-  }, [fetcher]);
 
   return (
     <Box>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography>{title}</Typography>
-            <Stack direction="row">
-              <Tooltip title="新增">
-                <Button
-                  variant="contained"
-                  startIcon={<Add />}
-                  onClick={() => onClickNewData()}
+      <Stack direction="row" justifyContent="space-between">
+        <Typography>{title}</Typography>
+        <Stack direction="row">
+          <Tooltip title="新增">
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              onClick={() => onNew()}
+            >
+              新增
+            </Button>
+          </Tooltip>
+        </Stack>
+      </Stack>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              {metadata.map((m, i) => (
+                <TableCell
+                  key={m.label}
+                  sx={{ width: m.width ? m.width : "auto" }}
                 >
-                  新增
-                </Button>
-              </Tooltip>
-            </Stack>
-          </Stack>
-          <TableContainer>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  {metadata.map((m, i) => (
-                    <TableCell key={m.label}>{m.label}</TableCell>
-                  ))}
-                  <TableCell>操作</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.map((d, i) => (
-                  <TableRow key={`${title}_${i}`}>
-                    {metadata.map((m, i) => (
-                      <TableCell key={m.key}>
-                        {m.preDisplay ? m.preDisplay(d) : d[m.key]}
-                      </TableCell>
-                    ))}
-                    <TableCell>
-                      <Stack direction="row">
-                        <Tooltip
-                          title="查看"
-                          onClick={() => onClickWatchData(d)}
-                        >
-                          <IconButton>
-                            <Visibility />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="編輯">
-                          <IconButton onClick={() => onClickEditData(d)}>
-                            <Edit />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="刪除">
-                          <IconButton onClick={() => onClickDeleteData(d)}>
-                            <Delete />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
+                  {m.label}{" "}
+                </TableCell>
+              ))}
+              <TableCell sx={{ width: "150px" }}>操作</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {datas?.map((d, i) => (
+              <TableRow key={`${title}_${i}`}>
+                {metadata.map((m, i) => (
+                  <TableCell key={`${m.key}`}>
+                    {m.preProcess ? m.preProcess(d) : d[m.key]}
+                  </TableCell>
                 ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Form
-            open={formModal}
-            type={formType}
-            data={selected}
-            onClose={onClose}
-            afterAction={fetcher}
-          />
-        </>
-      )}
+                <TableCell>
+                  <Stack direction="row">
+                    <Tooltip title="查看" onClick={() => onWatch(d)}>
+                      <IconButton>
+                        <Visibility />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="編輯">
+                      <IconButton onClick={() => onEdit(d)}>
+                        <Edit />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="刪除">
+                      <IconButton onClick={() => onDelete(d)}>
+                        <Delete />
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Form
+        open={formModal}
+        type={formType}
+        data={selected}
+        onClose={onClose}
+        fields={fields}
+        afterAction={afterAction}
+      />
     </Box>
   );
 };

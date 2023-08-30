@@ -1,3 +1,4 @@
+"use client";
 import { useEffect } from "react";
 import {
   Dialog,
@@ -40,7 +41,7 @@ const initData: FormData = {
   confirm: false,
 };
 
-interface Props extends FormProps {
+interface Props extends FormProps<Client> {
   data: Client | null;
 }
 
@@ -69,7 +70,7 @@ const ClientForm = (props: Props) => {
           address,
           email,
           note,
-          birth: birth.toISOString(),
+          birth: birth.toDate(),
         };
         try {
           const res = await postClient(p);
@@ -82,7 +83,7 @@ const ClientForm = (props: Props) => {
                 message: "新增客戶成功！",
               })
             );
-            afterAction();
+            // afterAction();
           }
         } catch (err) {
           dispatch(
@@ -104,7 +105,7 @@ const ClientForm = (props: Props) => {
           address,
           email,
           note,
-          birth: birth.toISOString(),
+          birth: birth.toDate(),
         };
         try {
           const res = await patchClient(data?.id!, p);
@@ -117,7 +118,7 @@ const ClientForm = (props: Props) => {
                 message: "編輯客戶成功！",
               })
             );
-            afterAction();
+            // afterAction();
           }
         } catch (err) {
           dispatch(
@@ -143,7 +144,7 @@ const ClientForm = (props: Props) => {
                 message: "刪除客戶成功！",
               })
             );
-            afterAction();
+            // afterAction();
           }
         } catch (err) {
           dispatch(
