@@ -1,10 +1,9 @@
-import { FC } from "react";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import ServiceCard from "@/app/component/card/service";
 
-const Page: FC = () => {
+const Page = () => {
   return (
     <Grid container rowGap={4}>
       <Grid lg={12}>

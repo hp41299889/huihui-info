@@ -4,7 +4,7 @@ import {
   Client,
   Product,
   Order,
-} from "@/app/home/collection/background-management-system/client-order-management/interface";
+} from "@/app/api/background-management-system/interface";
 import {
   getClients,
   getProducts,

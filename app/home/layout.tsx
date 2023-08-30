@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
-
 import { Box } from "@mui/material";
-import Header from "@/app/component/layout/header";
-import Messenger from "@/app/component/layout/messenger";
+
+import Header from "@/app/component/layout/header/header";
+import Messenger from "@/app/component/layout/sider/messenger";
 
 interface Props {
   children: ReactNode;

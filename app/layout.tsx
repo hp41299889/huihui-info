@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 
 import ThemeRegistry from "./themeRegister";
 import GlobalComponent from "./globalComponent";
-import { Providers } from "@/util/lib/redux/providers";
+import { Providers } from "@/util/client/redux/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
