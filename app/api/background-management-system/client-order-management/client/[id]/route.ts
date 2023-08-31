@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 
 import { apiResponse, response } from "@/app/api/api";
-import { prisma } from "@/prisma/prisma";
+import { prisma } from "@/util/server/prisma/prisma";
 import { PatchClient } from "@/app/api/background-management-system/client-order-management/client/interface";
 
 export const GET = async (
