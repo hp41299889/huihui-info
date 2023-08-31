@@ -34,7 +34,7 @@ const initData: FormData = {
   confirm: false,
 };
 
-interface Props extends FormProps {
+interface Props extends FormProps<Product> {
   data: Product | null;
 }
 
