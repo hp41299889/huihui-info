@@ -54,7 +54,7 @@ const initData: FormData = {
   client: { name: "" },
 };
 
-interface Props extends FormProps {
+interface Props extends FormProps<Order> {
   data: Order | null;
 }
 

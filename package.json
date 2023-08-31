@@ -9,11 +9,10 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "prebuild": "yarn db",
-    "db": "yarn prisma:g",
-    "prisma:g": "yarn prisma generate",
-    "prisma:prem": "yarn prisma format && yarn prisma:g",
-    "prisma:m": "yarn prisma:prem && dotenv -e .env.development.local -- yarn prisma db push"
+    "global:cli": "yarn global add ts-node",
+    "prebuild": "yarn global:cli && yarn db",
+    "db": "yarn prisma format && yarn prisma migrate deploy && yarn prisma generate",
+    "migrate": "dotenv -e .env.development.local -- yarn prisma migrate dev"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -62,5 +61,8 @@
     "jest-environment-jsdom": "^29.6.2",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1"
+  },
+  "prisma": {
+    "schema": "./util/server/prisma/schema.prisma"
   }
 }
