@@ -1,6 +1,4 @@
-import { ImageLinker } from "@/app/component/link/linker/interface";
-
-export const messengers: ImageLinker[] = [
+export const messengers = [
   {
     alt: "facebook",
     href: "https://www.facebook.com/profile.php?id=100094935322100",

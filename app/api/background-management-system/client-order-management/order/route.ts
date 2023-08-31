@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 
 import { apiResponse, response } from "@/app/api/api";
-import { prisma, OrderCreateInput } from "@/prisma/prisma";
+import { prisma, OrderCreateInput } from "@/util/server/prisma/prisma";
 import { PostOrder } from "./interface";
 import dayjs from "dayjs";
 

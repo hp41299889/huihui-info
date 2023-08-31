@@ -7,7 +7,7 @@ export interface FormProps<T> {
   type: FormType;
   data: FormData<T>;
   onClose: () => void;
-  afterAction?: () => Promise<void>;
+  afterAction: () => Promise<void>;
   fields?: {
     [key: string]: any[];
   };
