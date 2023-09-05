@@ -1,13 +1,13 @@
 import { NextRequest } from "next/server";
 
-import { apiResponse, response } from "@/app/api/api";
-import { prisma } from "@/util/server/prisma/prisma";
+import { apiErrorHandler, apiResponse, response } from "@/app/api/api";
 import { PostClient } from "./interface";
+import { createClient, findManyClients } from "./model";
 
 export const GET = async () => {
   const r = { ...response };
   try {
-    const clients = await prisma.client.findMany();
+    const clients = await findManyClients();
     r.response = {
       status: "success",
       message: "read clients success",
@@ -15,12 +15,7 @@ export const GET = async () => {
     };
     r.statusCode = 200;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "read clients failed",
-      data: err,
-    };
-    r.statusCode = 400;
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };
@@ -29,9 +24,7 @@ export const POST = async (req: NextRequest) => {
   const r = { ...response };
   try {
     const payload: PostClient = await req.json();
-    const client = await prisma.client.create({
-      data: { ...payload },
-    });
+    const client = await createClient(payload);
     r.response = {
       status: "success",
       message: "create client success",
@@ -39,12 +32,7 @@ export const POST = async (req: NextRequest) => {
     };
     r.statusCode = 201;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "create client failed",
-      data: err,
-    };
-    r.statusCode = 400;
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };

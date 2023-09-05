@@ -4,6 +4,7 @@ import Joi from "joi";
 import { apiResponse, response } from "../api";
 import { PostContact } from "./interface";
 import { sendMail } from "@/util/server/gmail";
+import { validateError } from "@/util/server/error";
 
 export const POST = async (req: NextRequest) => {
   const r = { ...response };
@@ -17,17 +18,12 @@ export const POST = async (req: NextRequest) => {
   });
   const { error } = schema.validate(payload);
   if (error) {
-    r.response = {
-      status: "failed",
-      message: "post contact error",
-      data: "format error",
-    };
-    r.statusCode = 400;
-    return apiResponse(r);
+    throw validateError("payload format error");
   }
   const { name, email, message, phone } = payload;
-  const result = await sendMail({
-    content: `
+  const result = await sendMail(
+    "huihui-info-合作聯絡",
+    `
     收到來自huihui-info的通知<br>
     <br>
     來自${email}的"${name}"：<br>
@@ -36,7 +32,8 @@ export const POST = async (req: NextRequest) => {
     <br>
     ${phone ? `連絡電話：${phone}` : ""}
     `,
-  });
+    "contact"
+  );
   r.response = {
     status: "success",
     message: "hi",
