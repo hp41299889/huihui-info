@@ -30,6 +30,7 @@ const RegisterForm = (props: Props) => {
         </Typography>
         <TextField id="username" label="帳號" {...register("username")} />
         <TextField id="password" label="密碼" {...register("password")} />
+        <TextField id="email" label="E-mail" />
         <Button variant="contained" type="submit">
           註冊
         </Button>

@@ -1,22 +1,8 @@
 import { NextRequest } from "next/server";
 
 import { apiResponse, response } from "@/app/api/api";
-import { prisma } from "@/util/server/prisma/prisma";
 import { PatchOrder } from "../interface";
-
-export const GET = async () => {
-  const r = { ...response };
-  try {
-  } catch (err) {}
-  return apiResponse(r);
-};
-
-export const POST = async () => {
-  const r = { ...response };
-  try {
-  } catch (err) {}
-  return apiResponse(r);
-};
+import { deleteOrderByUid, updateOrderByUid } from "../model";
 
 export const PATCH = async (
   req: NextRequest,
@@ -26,39 +12,7 @@ export const PATCH = async (
   const { uid } = context.params;
   try {
     const payload: PatchOrder = await req.json();
-    const { orderProducts, clientId, ...p } = payload;
-    const updatedOrder = await prisma.order.update({
-      where: {
-        uid,
-      },
-      data: {
-        ...p,
-        client: {
-          connect: {
-            id: Number(clientId),
-          },
-        },
-      },
-    });
-    const updatedProducts = orderProducts
-      ? await Promise.all(
-          orderProducts.map((product) =>
-            prisma.orderProduct.update({
-              where: {
-                orderUid_productUid: {
-                  orderUid: uid,
-                  productUid: product.productUid,
-                },
-              },
-              data: {
-                amount: Number(product.amount),
-                note: product.note,
-              },
-            })
-          )
-        )
-      : [];
-    const updated = { ...updatedOrder, ...updatedProducts };
+    const updated = updateOrderByUid(uid, payload);
     r.response = {
       status: "success",
       message: "update order success",
@@ -84,20 +38,11 @@ export const DELETE = async (
   const r = { ...response };
   const { uid } = context.params;
   try {
-    const orderProducts = await prisma.orderProduct.deleteMany({
-      where: {
-        orderUid: uid,
-      },
-    });
-    const order = await prisma.order.delete({
-      where: {
-        uid: uid,
-      },
-    });
+    const order = await deleteOrderByUid(uid);
     r.response = {
       status: "success",
       message: "delete order success",
-      data: { ...orderProducts, order },
+      data: order,
     };
     r.statusCode = 200;
   } catch (err) {
