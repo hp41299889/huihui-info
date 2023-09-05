@@ -42,12 +42,12 @@ import { setAppFeedbackSnackbar } from "@/util/client/redux/slice/app";
 interface FormData extends Omit<PostOrder, "date"> {
   confirm: boolean;
   client: { name: string };
-  date: Dayjs;
+  date: Date;
 }
 
 const initData: FormData = {
-  clientId: "",
-  date: dayjs(),
+  clientId: 0,
+  date: new Date(),
   note: "",
   orderProducts: [],
   confirm: false,
@@ -101,7 +101,7 @@ const OrderForm = (props: Props) => {
           clientId,
           note,
           orderProducts,
-          date: dayjs(date).toISOString(),
+          date: date,
         };
         try {
           const res = await postOrder(p);
@@ -135,7 +135,7 @@ const OrderForm = (props: Props) => {
             clientId,
             note,
             orderProducts,
-            date: dayjs(date).toISOString(),
+            date: date,
           };
           const res = await patchOrder(data?.uid!, p);
           if (res.data.status === "success") {
@@ -211,7 +211,7 @@ const OrderForm = (props: Props) => {
   }, [orderProductsWatcher, products]);
 
   useEffect(() => {
-    data ? reset({ ...data, date: dayjs(data?.date) }) : reset(initData);
+    data ? reset({ ...data, date: data.date }) : reset(initData);
   }, [data, reset]);
 
   return (
@@ -306,7 +306,7 @@ const OrderForm = (props: Props) => {
                       variant="outlined"
                       startIcon={<Add />}
                       onClick={() => {
-                        append({ productUid: "", amount: "" });
+                        append({ productUid: "", amount: 0 });
                       }}
                     >
                       Add

@@ -1,8 +1,12 @@
 import { NextRequest } from "next/server";
 
-import { apiResponse, response } from "@/app/api/api";
-import { prisma } from "@/util/server/prisma/prisma";
+import { apiErrorHandler, apiResponse, response } from "@/app/api/api";
 import { PatchClient } from "@/app/api/background-management-system/client-order-management/client/interface";
+import {
+  deleteClientById,
+  findFirstClientById,
+  updateClientById,
+} from "../model";
 
 export const GET = async (
   _: NextRequest,
@@ -11,7 +15,7 @@ export const GET = async (
   const r = { ...response };
   const { id } = context.params;
   try {
-    const client = await prisma.client.findFirst({ where: { id: Number(id) } });
+    const client = await findFirstClientById(id);
     r.response = {
       status: "success",
       message: "read client success",
@@ -19,12 +23,7 @@ export const GET = async (
     };
     r.statusCode = 200;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "read client failed",
-      data: err,
-    };
-    r.statusCode = 400;
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };
@@ -37,10 +36,7 @@ export const PATCH = async (
   const { id } = context.params;
   try {
     const payload: PatchClient = await req.json();
-    const updated = await prisma.client.update({
-      where: { id: Number(id) },
-      data: payload,
-    });
+    const updated = await updateClientById(id, payload);
     r.response = {
       status: "success",
       message: "update client success",
@@ -48,12 +44,7 @@ export const PATCH = async (
     };
     r.statusCode = 200;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "update client failed",
-      data: err,
-    };
-    r.statusCode = 400;
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };
@@ -65,7 +56,7 @@ export const DELETE = async (
   const r = { ...response };
   const { id } = context.params;
   try {
-    const deleted = await prisma.client.delete({ where: { id: Number(id) } });
+    const deleted = await deleteClientById(id);
     r.response = {
       status: "success",
       message: "delete client success",
@@ -73,13 +64,7 @@ export const DELETE = async (
     };
     r.statusCode = 200;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "delete client failed",
-      data: err,
-    };
-    r.statusCode = 400;
-    console.error(err);
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };

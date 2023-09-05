@@ -1,13 +1,13 @@
 import { NextRequest } from "next/server";
 
-import { apiResponse, response } from "@/app/api/api";
-import { prisma } from "@/util/server/prisma/prisma";
+import { apiErrorHandler, apiResponse, response } from "@/app/api/api";
 import { PostProduct } from "./interface";
+import { createProduct, findManyProducts } from "./model";
 
 export const GET = async () => {
   const r = { ...response };
   try {
-    const products = await prisma.product.findMany();
+    const products = await findManyProducts();
     r.response = {
       status: "success",
       message: "read products success",
@@ -15,12 +15,7 @@ export const GET = async () => {
     };
     r.statusCode = 200;
   } catch (err) {
-    r.response = {
-      status: "success",
-      message: "read products success",
-      data: err,
-    };
-    r.statusCode = 200;
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };
@@ -29,9 +24,7 @@ export const POST = async (req: NextRequest) => {
   const r = { ...response };
   const payload: PostProduct = await req.json();
   try {
-    const created = await prisma.product.create({
-      data: { ...payload, price: Number(payload.price) },
-    });
+    const created = await createProduct(payload);
     r.response = {
       status: "success",
       message: "create product success",
@@ -39,27 +32,7 @@ export const POST = async (req: NextRequest) => {
     };
     r.statusCode = 201;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "create product failed",
-      data: err,
-    };
-    r.statusCode = 400;
-    console.error(err);
+    return apiErrorHandler(err);
   }
-  return apiResponse(r);
-};
-
-export const PATCH = async () => {
-  const r = { ...response };
-  try {
-  } catch (err) {}
-  return apiResponse(r);
-};
-
-export const DELETE = async () => {
-  const r = { ...response };
-  try {
-  } catch (err) {}
   return apiResponse(r);
 };

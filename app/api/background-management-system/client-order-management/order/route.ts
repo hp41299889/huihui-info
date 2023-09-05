@@ -1,29 +1,13 @@
 import { NextRequest } from "next/server";
 
 import { apiResponse, response } from "@/app/api/api";
-import { prisma, OrderCreateInput } from "@/util/server/prisma/prisma";
 import { PostOrder } from "./interface";
-import dayjs from "dayjs";
+import { createOrder, findManyOrders } from "./model";
 
 export const GET = async () => {
   const r = { ...response };
   try {
-    const orders = await prisma.order.findMany({
-      include: {
-        client: {
-          select: {
-            name: true,
-          },
-        },
-        orderProducts: {
-          select: {
-            productUid: true,
-            amount: true,
-            note: true,
-          },
-        },
-      },
-    });
+    const orders = await findManyOrders();
     r.response = {
       status: "success",
       message: "read orders success",
@@ -44,28 +28,7 @@ export const POST = async (req: NextRequest) => {
   const r = { ...response };
   try {
     const payload: PostOrder = await req.json();
-    const { clientId, date, note, orderProducts } = payload;
-    const orderData: OrderCreateInput = {
-      client: {
-        connect: {
-          id: Number(clientId),
-        },
-      },
-      date: dayjs(date).toISOString(),
-      note,
-      orderProducts: {
-        create: orderProducts.map((item) => ({
-          product: {
-            connect: {
-              uid: item.productUid,
-            },
-          },
-          amount: Number(item.amount),
-          note: item.note,
-        })),
-      },
-    };
-    const order = await prisma.order.create({ data: orderData });
+    const order = await createOrder(payload);
     r.response = {
       status: "success",
       message: "create order success",
@@ -81,19 +44,5 @@ export const POST = async (req: NextRequest) => {
     r.statusCode = 400;
     console.error(err);
   }
-  return apiResponse(r);
-};
-
-export const PATCH = async () => {
-  const r = { ...response };
-  try {
-  } catch (err) {}
-  return apiResponse(r);
-};
-
-export const DELETE = async () => {
-  const r = { ...response };
-  try {
-  } catch (err) {}
   return apiResponse(r);
 };

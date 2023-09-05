@@ -11,8 +11,7 @@
     "test:watch": "jest --watchAll",
     "global:cli": "yarn global add ts-node",
     "prebuild": "yarn global:cli && yarn db",
-    "db": "yarn prisma format && yarn prisma migrate deploy && yarn prisma generate",
-    "migrate": "dotenv -e .env.development.local -- yarn prisma migrate dev"
+    "db": "yarn prisma format && yarn prisma migrate deploy && yarn prisma generate"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -22,6 +21,7 @@
     "@mui/x-date-pickers": "^6.10.2",
     "@prisma/client": "^5.0.0",
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/lodash": "^4.14.196",
     "@types/node": "20.4.2",
@@ -29,6 +29,7 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
+    "bcrypt": "^5.1.1",
     "dayjs": "^1.11.9",
     "dotenv": "^16.3.1",
     "encoding": "^0.1.13",
@@ -38,10 +39,10 @@
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
-    "next": "13.4.11",
+    "next": "^13.4.19",
     "pg": "^8.11.1",
     "postcss": "8.4.26",
-    "prisma": "^5.0.0",
+    "prisma": "^5.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.2",

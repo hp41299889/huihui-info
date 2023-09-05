@@ -1,8 +1,13 @@
 import { NextRequest } from "next/server";
 
-import { apiResponse, response } from "@/app/api/api";
+import { apiErrorHandler, apiResponse, response } from "@/app/api/api";
 import { prisma } from "@/util/server/prisma/prisma";
 import { PatchProduct } from "../interface";
+import {
+  deleteProductByUid,
+  findFirstProductByUid,
+  updateProductByUid,
+} from "../model";
 
 export const GET = async (
   _: NextRequest,
@@ -11,7 +16,7 @@ export const GET = async (
   const r = { ...response };
   const { uid } = context.params;
   try {
-    const finded = await prisma.product.findFirst({ where: { uid } });
+    const finded = await findFirstProductByUid(uid);
     r.response = {
       status: "success",
       message: "read product success",
@@ -19,12 +24,7 @@ export const GET = async (
     };
     r.statusCode = 200;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "read product failed",
-      data: err,
-    };
-    r.statusCode = 400;
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };
@@ -37,10 +37,7 @@ export const PATCH = async (
   const { uid } = context.params;
   try {
     const payload: PatchProduct = await req.json();
-    const updated = await prisma.product.update({
-      where: { uid },
-      data: payload,
-    });
+    const updated = await updateProductByUid(uid, payload);
     r.response = {
       status: "success",
       message: "update product success",
@@ -48,13 +45,7 @@ export const PATCH = async (
     };
     r.statusCode = 200;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "update product failed",
-      data: err,
-    };
-    r.statusCode = 400;
-    console.error(err);
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };
@@ -66,7 +57,7 @@ export const DELETE = async (
   const r = { ...response };
   const { uid } = context.params;
   try {
-    const deleted = await prisma.product.delete({ where: { uid } });
+    const deleted = await deleteProductByUid(uid);
     r.response = {
       status: "success",
       message: "delete product success",
@@ -74,12 +65,7 @@ export const DELETE = async (
     };
     r.statusCode = 200;
   } catch (err) {
-    r.response = {
-      status: "failed",
-      message: "delete product failed",
-      data: err,
-    };
-    r.statusCode = 400;
+    return apiErrorHandler(err);
   }
   return apiResponse(r);
 };
