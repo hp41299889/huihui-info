@@ -3,6 +3,8 @@ import { NextRequest } from "next/server";
 import { apiErrorHandler, apiResponse, response } from "../../api";
 import { oauthClient } from "@/util/server/oauth";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (req: NextRequest) => {
   const r = { ...response };
   try {
